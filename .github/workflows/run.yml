@@ -28,6 +28,10 @@ jobs:
           echo "WIN_SPY=https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt" >> $GITHUB_ENV
           echo "WIN_UPDATE=https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/update.txt" >> $GITHUB_ENV
           echo "WIN_EXTRA=https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/extra.txt" >> $GITHUB_ENV
+          echo "CATEGORY_CDN=https://raw.githubusercontent.com/chunsing128/Surge-1/refs/heads/master/Source/domainset/cdn.conf" >> $GITHUB_ENV
+          echo "CATEGORY_CDN=https://raw.githubusercontent.com/chunsing128/Surge-1/refs/heads/master/Source/domainset/cdn.conf" >> $GITHUB_ENV
+          echo "CATEGORY_DOWNLOAD=https://raw.githubusercontent.com/chunsing128/Surge-1/refs/heads/master/Source/domainset/download.conf" >> $GITHUB_ENV
+          echo "CATEGORY_DOWNLOAD_GAME=https://raw.githubusercontent.com/chunsing128/Surge-1/refs/heads/master/Source/domainset/game-download.conf" >> $GITHUB_ENV
         shell: bash
 
       - name: Checkout the "hidden" branch of this repo
@@ -146,7 +150,7 @@ jobs:
           cp ./community/data/geolocation-\!cn proxy-list.txt
           cp ./community/data/category-ads-all reject-list.txt
 
-      - name: Create `china-list`、`gfw`、`greatfire` lists
+      - name: Create `china-list`,`gfw`,`greatfire`, "category-cdn" lists
         run: |
           curl -sSL $CHINA_DOMAINS_URL | perl -ne '/^server=\/([^\/]+)\// && print "$1\n"' > ./community/data/china-list
           curl -sSL $CHINA_DOMAINS_URL | perl -ne '/^server=\/([^\/]+)\// && print "$1\n"' > china-list.txt
@@ -159,7 +163,11 @@ jobs:
           curl -sSL $WIN_UPDATE | grep "0.0.0.0" | awk '{print $2}' > win-update.txt
           curl -sSL $WIN_EXTRA | grep "0.0.0.0" | awk '{print $2}' > ./community/data/win-extra
           curl -sSL $WIN_EXTRA | grep "0.0.0.0" | awk '{print $2}' > win-extra.txt
-
+          #from https://github.com/chunsing128/Surge-1/blob/master/Source/domainset/cdn.conf
+          curl -sSL "$CATEGORY_CDN" | awk '/0\.0\.0\.0/{d=tolower($2); if(d ~ /^\./){sub(/^\./,"",d); print "domain:*" d} else {print "domain:" d}}' | sort -u | tee ./community/data/category-cdn category-cdn.txt
+          curl -sSL "$CATEGORY_DOWNLOAD" | awk '/0\.0\.0\.0/{d=tolower($2); if(d ~ /^\./){sub(/^\./,"",d); print "domain:*" d} else {print "domain:" d}}' | sort -u | tee ./community/data/category-download category-download.txt
+          curl -sSL "$CATEGORY_DOWNLOAD_GAME" | awk '/0\.0\.0\.0/{d=tolower($2); if(d ~ /^\./){sub(/^\./,"",d); print "domain:*" d} else {print "domain:" d}}' | sort -u | tee ./community/data/category-download-game category-download-game.txt
+          
       - name: Build geosite.dat file
         run: |
           cd custom || exit 1

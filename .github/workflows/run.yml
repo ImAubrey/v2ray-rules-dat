@@ -164,9 +164,10 @@ jobs:
           curl -sSL $WIN_EXTRA | grep "0.0.0.0" | awk '{print $2}' > ./community/data/win-extra
           curl -sSL $WIN_EXTRA | grep "0.0.0.0" | awk '{print $2}' > win-extra.txt
           #from https://github.com/chunsing128/Surge-1/blob/master/Source/domainset/cdn.conf
-          curl -sSL "$CATEGORY_CDN" | awk '/0\.0\.0\.0/{d=tolower($2); if(d ~ /^\./){sub(/^\./,"",d); print "domain:*" d} else {print "domain:" d}}' | sort -u | tee ./community/data/category-cdn category-cdn.txt
-          curl -sSL "$CATEGORY_DOWNLOAD" | awk '/0\.0\.0\.0/{d=tolower($2); if(d ~ /^\./){sub(/^\./,"",d); print "domain:*" d} else {print "domain:" d}}' | sort -u | tee ./community/data/category-download category-download.txt
-          curl -sSL "$CATEGORY_DOWNLOAD_GAME" | awk '/0\.0\.0\.0/{d=tolower($2); if(d ~ /^\./){sub(/^\./,"",d); print "domain:*" d} else {print "domain:" d}}' | sort -u | tee ./community/data/category-download-game category-download-game.txt
+          curl -sSL "$CATEGORY_CDN" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-cdn category-cdn.txt
+          curl -sSL "$CATEGORY_CDN" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-download category-download.txt
+          curl -sSL "$CATEGORY_CDN" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-download-game category-download-game.txt
+
           
       - name: Build geosite.dat file
         run: |

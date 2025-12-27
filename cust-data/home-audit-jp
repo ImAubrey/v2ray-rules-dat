@@ -9,7 +9,6 @@ include:category-public-tracker
 include:paypal
 include:stripe
 include:unionpay
-
 .pay
 .wallet
 360.cn
@@ -119,6 +118,7 @@ onedns.net
 online.myjms.jp
 opennic.org
 oszx.co
+payment
 paid.jp
 paidy.
 paidy.com

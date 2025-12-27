@@ -173,6 +173,8 @@ jobs:
       - name: Import custom geosite lists from cust-data
         run: |
           # 如果有 cust-data 目录，就把里面所有普通文件丢进 community/data
+          git fetch --depth 1 origin master
+          git checkout origin/master -- cust-data || true
           if [ -d "./cust-data" ]; then
             for f in ./cust-data/*; do
               if [ -f "$f" ]; then

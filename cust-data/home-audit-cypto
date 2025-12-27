@@ -1,6 +1,7 @@
-geosite:category-cryptocurrency
-geosite:binance
-geosite:okx
+include:category-cryptocurrency
+include:binance
+include:okx
+include:bybit
 llamarpc.com
 www.ozon.ru
 xn--ngstr-lra8j.com

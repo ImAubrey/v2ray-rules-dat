@@ -170,7 +170,17 @@ jobs:
           curl -sSL "$CATEGORY_DOWNLOAD" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-download category-download.txt
           curl -sSL "$CATEGORY_DOWNLOAD_GAME" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-download-game category-download-game.txt
 
-          
+      - name: Import custom geosite lists from cust-data
+        run: |
+          # 如果有 cust-data 目录，就把里面所有普通文件丢进 community/data
+          if [ -d "./cust-data" ]; then
+            for f in ./cust-data/*; do
+              if [ -f "$f" ]; then
+                cp "$f" ./community/data/
+              fi
+            done
+          fi
+
       - name: Build geosite.dat file
         run: |
           cd custom || exit 1

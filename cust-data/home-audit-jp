@@ -9,8 +9,8 @@ include:category-public-tracker
 include:paypal
 include:stripe
 include:unionpay
-.pay
-.wallet
+keyword:.pay
+keyword:.wallet
 360.cn
 adguard.com
 adguard-dns.com
@@ -118,12 +118,12 @@ onedns.net
 online.myjms.jp
 opennic.org
 oszx.co
-payment
+keyword:google
 paid.jp
 paidy.
 paidy.com
 pasmo.co.jp
-pay.
+keyword:pay.
 pay.google.com
 pay.jp
 pay.line.me
@@ -165,7 +165,7 @@ toica.jp
 tsite.jp
 veritrans.co.jp
 vpc.lifecard.co.jp
-wallet.
+keyword:wallet.
 waon.net
 webmoney.jp
 wise.com

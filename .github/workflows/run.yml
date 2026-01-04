@@ -32,6 +32,7 @@ jobs:
           echo "CATEGORY_DOWNLOAD=https://raw.githubusercontent.com/SukkaW/Surge/refs/heads/master/Source/domainset/download.conf" >> $GITHUB_ENV
           echo "CATEGORY_DOWNLOAD_GAME=https://raw.githubusercontent.com/SukkaW/Surge/refs/heads/master/Source/domainset/game-download.conf" >> $GITHUB_ENV
           echo "CATEGORY_NSFW=https://nsfw.oisd.nl" >> $GITHUB_ENV
+          echo "CATEGORY_DOH=https://raw.githubusercontent.com/jameshas/Public-DoH-Lists/main/lists/doh_domains_plain.txt" >> $GITHUB_ENV
         shell: bash
 
       - name: Checkout the "hidden" branch of this repo
@@ -169,7 +170,7 @@ jobs:
           curl -sSL "$CATEGORY_CDN" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-cdn category-cdn.txt
           curl -sSL "$CATEGORY_DOWNLOAD" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-download category-download.txt
           curl -sSL "$CATEGORY_DOWNLOAD_GAME" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-download-game category-download-game.txt
-
+          curl -sSL "$CATEGORY_DOH" | awk '{l=$0; sub(/\r$/,"",l); if(l~/^[[:space:]]*#/||l~/^[[:space:]]*$/){if(!s[l]++)print l; next} gsub(/^[ \t]+|[ \t]+$/,"",l); if(l~/^\./){sub(/^\./,"",l); l="domain:*." l} if(!s[l]++)print l}' | tee ./community/data/category-doh category-doh.txt
       - name: Import custom geosite lists from cust-data
         run: |
           # 如果有 cust-data 目录，就把里面所有普通文件丢进 community/data

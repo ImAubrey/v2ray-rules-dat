@@ -184,10 +184,34 @@ jobs:
             done
           fi
 
+      - name: Remove excluded geosite categories
+        run: |
+          # Preserve rules included by aggregate categories before removing subcategories.
+          sed -i '/^include:bytedance-ai-!cn/d' ./community/data/bytedance
+          cat './community/data/bytedance-ai-!cn' >> ./community/data/bytedance
+          for parent in category-entertainment category-games; do
+            sed -i '/^include:category-games-!cn/d' "./community/data/${parent}"
+            cat './community/data/category-games-!cn' >> "./community/data/${parent}"
+          done
+
+          rm -f \
+            './community/data/bytedance-ai-!cn' \
+            './community/data/category-ai-!cn' \
+            './community/data/category-ai-chat-!cn' \
+            './community/data/category-browser-!cn' \
+            './community/data/category-cdn-!cn' \
+            './community/data/category-games-!cn' \
+            './community/data/category-netdisk-!cn' \
+            './community/data/category-scholar-!cn' \
+            './community/data/category-social-media-!cn' \
+            './community/data/tld-!cn' \
+            './community/data/gfw' \
+            './community/data/geolocation-!cn'
+
       - name: Build geosite.dat file
         run: |
           cd custom || exit 1
-          go run ./ --datapath=../community/data
+          go run ./ --datapath=../community/data --togfwlist=
 
       - name: Move and zip files and generate sha256 hash
         run: |

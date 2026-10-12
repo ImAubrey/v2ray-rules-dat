@@ -176,6 +176,7 @@ jobs:
           # 如果有 cust-data 目录，就把里面所有普通文件丢进 community/data
           git fetch --depth 1 origin master
           git checkout origin/master -- cust-data || true
+          git checkout origin/master -- scripts
           if [ -d "./cust-data" ]; then
             for f in ./cust-data/*; do
               if [ -f "$f" ]; then
@@ -207,6 +208,11 @@ jobs:
             './community/data/tld-!cn' \
             './community/data/gfw' \
             './community/data/geolocation-!cn'
+
+      - name: Generate ALL geosite category
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_*.py'
+          python3 scripts/generate_all.py ./community/data
 
       - name: Build geosite.dat file
         run: |

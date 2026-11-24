@@ -1,0 +1,6 @@
+{
+  "adguard-github": "https://raw.githubusercontent.com/ImAubrey/AdGuard-Rule/main/rule/all.txt",
+  "adguard-doh": "https://raw.githubusercontent.com/jameshas/Public-DoH-Lists/main/lists/doh_domains_plain.txt",
+  "adguard-aubrey-custom": "https://raw.githubusercontent.com/ImAubrey/AdGuard-Rule/main/single-custom-list.txt",
+  "adguard-rebind": "https://adguardteam.github.io/HostlistsRegistry/assets/filter_71.txt"
+}

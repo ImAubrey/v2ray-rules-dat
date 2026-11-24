@@ -1,0 +1,74 @@
+name: Build external block-list
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 22 * * *"
+  push:
+    branches:
+      - master
+    paths:
+      - "block-list/**"
+      - ".github/workflows/block-list.yml"
+
+permissions:
+  contents: write
+concurrency:
+  group: block-list-publication
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source lists and scripts
+        uses: actions/checkout@v5
+      - name: Checkout the GeoSite compiler
+        uses: actions/checkout@v5
+        with:
+          repository: ImAubrey/domain-list-custom
+          path: compiler
+          persist-credentials: false
+      - name: Checkout community domain lists
+        uses: actions/checkout@v5
+        with:
+          repository: v2fly/domain-list-community
+          path: community
+          persist-credentials: false
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: compiler/go.mod
+          cache-dependency-path: compiler/go.sum
+      - name: Test the list converters
+        run: python3 -B -m unittest discover -s block-list -p 'test_*.py'
+      - name: Compile and verify block-list.dat
+        shell: bash
+        run: |
+          work=$(mktemp -d "$RUNNER_TEMP/block-list.XXXXXX")
+          trap 'rm -rf -- "$work"' EXIT
+          python3 block-list/generate_bank.py community/data "$work/data" block-list/category-bank-legacy
+          python3 block-list/compile_adguard_domains.py block-list/adguard-sources.json "$work/data" "$work/block-list-report.json"
+          (
+            cd compiler
+            go run ./ --datapath="$work/data" --outputpath="$work" --datname=block-list.dat --exportlists= --excludeattrs= --togfwlist=
+            go run ../block-list/verify_dat.go "$work/block-list.dat" "$work/block-list-report.json"
+          )
+          mkdir -p "$RUNNER_TEMP/block-list-publication"
+          install -m 0644 "$work/block-list.dat" "$work/block-list-report.json" "$RUNNER_TEMP/block-list-publication/"
+          cd "$RUNNER_TEMP/block-list-publication"
+          sha256sum block-list.dat > block-list.dat.sha256sum
+      - name: Publish the block-list snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/block-list-publication"
+          index_dir=$(mktemp -d "$RUNNER_TEMP/block-list-index.XXXXXX")
+          trap 'rm -rf -- "$index_dir"' EXIT
+          export GIT_INDEX_FILE="$index_dir/index"
+          git read-tree --empty
+          git -C "$output" --git-dir="$GITHUB_WORKSPACE/.git" --work-tree="$output" add -- block-list.dat block-list.dat.sha256sum block-list-report.json
+          tree=$(git write-tree)
+          commit=$(git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit-tree "$tree" -m 'Publish block-list.dat')
+          branch=refs/heads/block-list
+          previous=$(git ls-remote --refs origin "$branch" | cut -f1)
+          git push --force-with-lease="$branch:$previous" origin "$commit:$branch"

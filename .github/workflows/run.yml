@@ -212,6 +212,7 @@ jobs:
       - name: Generate ALL geosite category
         run: |
           python3 -m unittest discover -s scripts -p 'test_*.py'
+          python3 scripts/generate_bank.py ./community/data
           python3 scripts/generate_all.py ./community/data
 
       - name: Build geosite.dat file

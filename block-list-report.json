@@ -1,0 +1,61 @@
+{
+  "sources": {
+    "adguard-github": {
+      "input_sha256": "3e768e3da9053a2de84ce557b8dedfed9a15691e58d82839204d9cfb5968328c",
+      "category_records": {
+        "adguard-github-important-allow": 19,
+        "adguard-github-important-block": 12,
+        "adguard-github-allow": 150,
+        "adguard-github": 2345001
+      },
+      "skipped_rules": {
+        "exception_modifiers": 851,
+        "exception_pattern": 62,
+        "exception_regex": 6,
+        "modifiers": 8243,
+        "regex": 3679,
+        "unsupported_pattern": 6861
+      },
+      "tags": {
+        "important-allow": "ext:block-list.dat:adguard-github-important-allow",
+        "important-block": "ext:block-list.dat:adguard-github-important-block",
+        "allow": "ext:block-list.dat:adguard-github-allow",
+        "block": "ext:block-list.dat:adguard-github"
+      }
+    },
+    "adguard-doh": {
+      "input_sha256": "98a19de24f2514835204efcd09de67103e513007d8261acfd0e6562ea321836d",
+      "category_records": {
+        "adguard-doh": 645
+      },
+      "skipped_rules": {},
+      "tags": {
+        "block": "ext:block-list.dat:adguard-doh"
+      }
+    },
+    "adguard-aubrey-custom": {
+      "input_sha256": "ccd315bf965c4926ec43f97ed966410ba173bdb59143596179d8abbe8efe2d89",
+      "category_records": {
+        "adguard-aubrey-custom-important-block": 3,
+        "adguard-aubrey-custom": 8
+      },
+      "skipped_rules": {},
+      "tags": {
+        "important-block": "ext:block-list.dat:adguard-aubrey-custom-important-block",
+        "block": "ext:block-list.dat:adguard-aubrey-custom"
+      }
+    },
+    "adguard-rebind": {
+      "input_sha256": "71ed862e43bf0dc4eadb45dcb0c3c31dd174bbefba4a67ecc194bfbe4d4a5421",
+      "category_records": {
+        "adguard-rebind-allow": 62
+      },
+      "skipped_rules": {
+        "regex": 12
+      },
+      "tags": {
+        "allow": "ext:block-list.dat:adguard-rebind-allow"
+      }
+    }
+  }
+}
